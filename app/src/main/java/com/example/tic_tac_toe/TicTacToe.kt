@@ -2,7 +2,7 @@
 //
 // Autors:   Mārtiņš Nikiforovs 221RDB386
 //
-// GitHub:
+// GitHub: https://github.com/221RDB386-Martins-Nikiforovs/tic-tac-toe
 //
 // !!! Atsauces pašās projekta beigās !!!
 //
@@ -103,6 +103,7 @@ fun TicTacToe(sharedPreferences: SharedPreferences, context: Context) {
                 color = Color.White
             )
             Spacer(modifier = Modifier.width(8.dp))
+            // 1.2
             Switch(
                 checked = isComputerMode,
                 onCheckedChange = { isChecked -> isComputerMode = isChecked },
@@ -276,6 +277,8 @@ fun findBestMove(board: Array<Array<String?>>): Move {
 
 data class Move(var row: Int, var col: Int)
 
+// 1.1
+
 fun minimax(board: Array<Array<String?>>, depth: Int, isMaximizing: Boolean): Int {
     val score = score(board)
     if (score == 10 || score == -10) {
@@ -413,3 +416,360 @@ fun AuthorPupUp(
         dismissButton = null
     )
 }
+
+// ATSAUCES:
+
+//1.1
+// MiniMax algoritms (taisīts  mākslīgāintelekta priekšmeta vajadzībai un atkārtoti izmantots šeit): https://github.com/catisioo/Komanda_34_MIP/blob/main/othermain.py
+// ChatGpt vaicājumi:
+// 1.1 "translate this minimax python code to Kotlin, for android app with API 28, its for tic-tac -tie game: "def minimax(number, depth, player):
+//  if depth == 0 or number <= 10:
+//    return 1  # Default divisor and score if depth is 0 or number is small
+//
+//  best_divisor = None
+//  best_score = float('-inf') if player == 1 else float('inf')
+//
+//  for divisor in [2, 3, 4]:
+//    if number % divisor == 0:
+//        new_number = number // divisor
+//        eval_score = minimax(new_number, depth - 1, 2 if player == 1 else 1)
+//
+//        if player == 1:
+//            if eval_score > best_score:
+//                best_score = eval_score
+//                best_divisor = divisor
+//        else:
+//            if eval_score < best_score:
+//                best_score = eval_score
+//                best_divisor = divisor
+//
+//  return best_divisor if best_divisor is not None else 1", here is the existing Kotlin game code: "package com.example.tic_tac_toe
+//
+//import androidx.compose.foundation.background
+//import androidx.compose.foundation.layout.Arrangement
+//import androidx.compose.foundation.layout.Box
+//import androidx.compose.foundation.layout.Column
+//import androidx.compose.foundation.layout.Row
+//import androidx.compose.foundation.layout.fillMaxSize
+//import androidx.compose.foundation.layout.fillMaxWidth
+//import androidx.compose.foundation.layout.padding
+//import androidx.compose.material3.Button
+//import androidx.compose.material3.MaterialTheme
+//import androidx.compose.material3.Text
+//import androidx.compose.runtime.Composable
+//import androidx.compose.runtime.LaunchedEffect
+//import androidx.compose.runtime.mutableStateOf
+//import androidx.compose.runtime.remember
+//import androidx.compose.ui.Modifier
+//import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.unit.dp
+//import kotlinx.coroutines.delay
+//
+//@Composable
+//fun TicTacToe() {
+//    val board = remember {
+//        mutableStateOf(Array(3) { arrayOfNulls<String>(3) })
+//    }
+//
+//    val currentPlayer = remember {
+//        mutableStateOf("X")
+//    }
+//
+//    val winner = remember {
+//        mutableStateOf<String?>(null)
+//    }
+//
+//    val initialBoard = Array(3){
+//        arrayOfNulls<String>(3)
+//    }
+//
+//    val initialPlayer = "X"
+//
+//    Column(modifier = Modifier
+//        .fillMaxSize()
+//        .background(MaterialTheme.colorScheme.error)
+//        .padding(16.dp)
+//    )
+//    {
+//        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center)
+//        {
+//            Text(text = "Tic-Tac-Toe   :)",  style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.onSurface)
+//        }
+//        Box(modifier = Modifier
+//            .padding(16.dp)
+//            .fillMaxWidth()
+//        )
+//        {
+//            Column {
+//                for (row in 0 .. 2){
+//                    Row {
+//                        for (col in 0 .. 2){
+//                            Button(modifier = Modifier
+//                                .weight(1f)
+//                                .padding(4.dp), onClick = {
+//                                if (board.value [row] [col] == null && winner.value == null){
+//                                    board.value[row][col] = currentPlayer.value
+//                                    currentPlayer.value = if (currentPlayer.value == "X") "O" else "X"
+//                                    winner.value = checkForWinner(board.value)
+//                                }
+//                            }) {
+//                                Text(text = board.value[row] [col] ?: "", style =  MaterialTheme.typography.headlineSmall, color = Color.White)
+//                            }
+//                        }
+//                    }
+//                }
+//                Text(
+//                    text = "Current Player: ${currentPlayer.value}",
+//                    style = MaterialTheme.typography.headlineSmall,
+//                    color = MaterialTheme.colorScheme.onSurface,
+//                    modifier = Modifier.padding(top =  16.dp)
+//                )
+//                if (winner.value != null){
+//                    Text(
+//                        text = "Winner: ${winner.value}",
+//                        style = MaterialTheme.typography.headlineSmall,
+//                        color = MaterialTheme.colorScheme.onSurface,
+//                        modifier = Modifier.padding(top =  4.dp)
+//                    )
+//                    LaunchedEffect(true){
+//                        delay(2000)
+//                        board.value = initialBoard
+//                        currentPlayer.value=initialPlayer
+//                        winner.value=null
+//                    }
+//                }
+//
+//                Button(onClick = {board.value = initialBoard
+//                currentPlayer.value=initialPlayer
+//                    winner.value=null}){
+//                    Text(
+//                        text = "Reset",
+//                        style = MaterialTheme.typography.headlineSmall,
+//                        color = Color.White,
+//                        modifier = Modifier.padding(top = 4.dp)
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}fun checkForWinner(board:Array<Array<String?>>): String? {
+//    for (row in 0 .. 2){
+//    if (board[row] [0] !=null  && board[row][0] == board[row][1] && board[row][1] == board[row][2]) {
+//        return board[row][0]
+//        }
+//    }
+//    for (col in 0 .. 2){
+//        if (board[0] [col] !=null  && board[0][col] == board[1][col] && board[1][col] == board[2][col]) {
+//            return board[0][col]
+//        }
+//    }
+//    if (board[0][0] !=null && board[0][0] == board[1][1] && board[1][1] == board[2][2]){
+//        return board[0][0]
+//    }
+//    if (board[0][2] !=null && board[0][2] == board[1][1] && board[1][1] == board[2][0]){
+//        return board[0][2]
+//    }
+//    return null
+//}
+//
+//""
+
+//1.1.1 "modify the following Kotlin code for android API 28, its a tic tac toe game, where the minimax algorithm needs to be used for human vs computer gamemode: "package com.example.tic_tac_toe
+//
+//import androidx.compose.foundation.background
+//import androidx.compose.foundation.layout.Arrangement
+//import androidx.compose.foundation.layout.Box
+//import androidx.compose.foundation.layout.Column
+//import androidx.compose.foundation.layout.Row
+//import androidx.compose.foundation.layout.fillMaxSize
+//import androidx.compose.foundation.layout.fillMaxWidth
+//import androidx.compose.foundation.layout.padding
+//import androidx.compose.material3.Button
+//import androidx.compose.material3.MaterialTheme
+//import androidx.compose.material3.Text
+//import androidx.compose.runtime.Composable
+//import androidx.compose.runtime.LaunchedEffect
+//import androidx.compose.runtime.mutableStateOf
+//import androidx.compose.runtime.remember
+//import androidx.compose.ui.Modifier
+//import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.unit.dp
+//import kotlinx.coroutines.delay
+//
+//@Composable
+//fun TicTacToe() {
+//    val board = remember {
+//        mutableStateOf(Array(3) { arrayOfNulls<String>(3) })
+//    }
+//
+//    val currentPlayer = remember {
+//        mutableStateOf("X")
+//    }
+//
+//    val winner = remember {
+//        mutableStateOf<String?>(null)
+//    }
+//
+//    val initialBoard = Array(3){
+//        arrayOfNulls<String>(3)
+//    }
+//
+//    val initialPlayer = "X"
+//
+//    Column(modifier = Modifier
+//        .fillMaxSize()
+//        .background(MaterialTheme.colorScheme.error)
+//        .padding(16.dp)
+//    )
+//    {
+//        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center)
+//        {
+//            Text(text = "Tic-Tac-Toe   :)",  style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.onSurface)
+//        }
+//        Box(modifier = Modifier
+//            .padding(16.dp)
+//            .fillMaxWidth()
+//        )
+//        {
+//            Column {
+//                for (row in 0 .. 2){
+//                    Row {
+//                        for (col in 0 .. 2){
+//                            Button(modifier = Modifier
+//                                .weight(1f)
+//                                .padding(4.dp), onClick = {
+//                                if (board.value [row] [col] == null && winner.value == null){
+//                                    board.value[row][col] = currentPlayer.value
+//                                    currentPlayer.value = if (currentPlayer.value == "X") "O" else "X"
+//                                    winner.value = checkForWinner(board.value)
+//                                }
+//                            }) {
+//                                Text(text = board.value[row] [col] ?: "", style =  MaterialTheme.typography.headlineSmall, color = Color.White)
+//                            }
+//                        }
+//                    }
+//                }
+//                Text(
+//                    text = "Current Player: ${currentPlayer.value}",
+//                    style = MaterialTheme.typography.headlineSmall,
+//                    color = MaterialTheme.colorScheme.onSurface,
+//                    modifier = Modifier.padding(top =  16.dp)
+//                )
+//                if (winner.value != null){
+//                    Text(
+//                        text = "Winner: ${winner.value}",
+//                        style = MaterialTheme.typography.headlineSmall,
+//                        color = MaterialTheme.colorScheme.onSurface,
+//                        modifier = Modifier.padding(top =  4.dp)
+//                    )
+//                    LaunchedEffect(true){
+//                        delay(2000)
+//                        board.value = initialBoard
+//                        currentPlayer.value=initialPlayer
+//                        winner.value=null
+//                    }
+//                }
+//
+//                Button(onClick = {board.value = initialBoard
+//                currentPlayer.value=initialPlayer
+//                    winner.value=null}){
+//                    Text(
+//                        text = "Reset",
+//                        style = MaterialTheme.typography.headlineSmall,
+//                        color = Color.White,
+//                        modifier = Modifier.padding(top = 4.dp)
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}fun checkForWinner(board:Array<Array<String?>>): String? {
+//    for (row in 0 .. 2){
+//    if (board[row] [0] !=null  && board[row][0] == board[row][1] && board[row][1] == board[row][2]) {
+//        return board[row][0]
+//        }
+//    }
+//    for (col in 0 .. 2){
+//        if (board[0] [col] !=null  && board[0][col] == board[1][col] && board[1][col] == board[2][col]) {
+//            return board[0][col]
+//        }
+//    }
+//    if (board[0][0] !=null && board[0][0] == board[1][1] && board[1][1] == board[2][2]){
+//        return board[0][0]
+//    }
+//    if (board[0][2] !=null && board[0][2] == board[1][1] && board[1][1] == board[2][0]){
+//        return board[0][2]
+//    }
+//    return null
+//}
+//fun minimax(number: Int, depth: Int, player: Int): Int {
+//    if (depth == 0 || number <= 10) {
+//        return 1 // Default divisor and score if depth is 0 or number is small
+//    }
+//
+//    var bestDivisor: Int? = null
+//    var bestScore = if (player == 1) Int.MIN_VALUE else Int.MAX_VALUE
+//
+//    for (divisor in listOf(2, 3, 4)) {
+//        if (number % divisor == 0) {
+//            val newNumber = number / divisor
+//            val evalScore = minimax(newNumber, depth - 1, if (player == 1) 2 else 1)
+//
+//            if (player == 1) {
+//                if (evalScore > bestScore) {
+//                    bestScore = evalScore
+//                    bestDivisor = divisor
+//                }
+//            } else {
+//                if (evalScore < bestScore) {
+//                    bestScore = evalScore
+//                    bestDivisor = divisor
+//                }
+//            }
+//        }
+//    }
+//
+//    return bestDivisor ?: 1
+//}"
+// 1.1 modify your kotlin code for android API 28, so that there would be two buttons one to choose player vs player, and one for player vs computer (uses minimax algorithm)
+
+
+
+// 1.1  wher minimax
+
+// 1.1  rewrite entire code plis
+
+// 1.1 turn this into minimax plis daddy "fun getComputerMove(board: Array<Array<String?>>): Pair<Int, Int> {
+//    // Call minimax to determine the best move for the computer
+//    // For simplicity, let's say the computer makes the first available move
+//    for (row in board.indices) {
+//        for (col in board[row].indices) {
+//            if (board[row][col] == null) {
+//                return Pair(row, col)
+//            }
+//        }
+//    }
+//    // This should never happen if the game logic is correct
+//    return Pair(0, 0)
+//}"
+
+
+// 1.1  make button switch "        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+//            Button(
+//                onClick = { isComputerMode = false },
+//                modifier = Modifier.padding(8.dp)
+//            ) {
+//                Text(text = "Player vs Player")
+//            }
+//            Button(
+//                onClick = { isComputerMode = true },
+//                modifier = Modifier.padding(8.dp)
+//            ) {
+//                Text(text = "Player vs Computer")
+//            }
+//        }"
+
+
+
+
+//1.2 how do i update the ui on switch getting clicked
